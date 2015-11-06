@@ -249,6 +249,12 @@ public class ColibriIQProvider
             if ((conferenceID != null) && (conferenceID.length() != 0))
                 conference.setID(conferenceID);
 
+            String conferenceName = parser
+                .getAttributeValue("", ColibriConferenceIQ.NAME_ATTR_NAME);
+
+            if ((conferenceName != null) && (conferenceName.length() != 0))
+                conference.setName(conferenceName);
+
             boolean done = false;
             ColibriConferenceIQ.Channel channel = null;
             ColibriConferenceIQ.RTCPTerminationStrategy rtcpTerminationStrategy
@@ -587,8 +593,6 @@ public class ColibriIQProvider
                                 = parser.getAttributeValue(
                                 "",
                                 ColibriConferenceIQ.Recording.STATE_ATTR_NAME);
-                        boolean state = Boolean.parseBoolean(stateStr);
-
                         String token
                                 = parser.getAttributeValue(
                                 "",
@@ -596,7 +600,7 @@ public class ColibriIQProvider
 
                         recording
                                 = new ColibriConferenceIQ.Recording(
-                                state,
+                                stateStr,
                                 token);
                     }
                     else if (ColibriConferenceIQ.SctpConnection.ELEMENT_NAME

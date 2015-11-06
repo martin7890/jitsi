@@ -25,7 +25,7 @@ import javax.swing.*;
 
 import net.java.sip.communicator.plugin.desktoputil.*;
 import net.java.sip.communicator.plugin.desktoputil.wizard.*;
-
+import net.java.sip.communicator.service.protocol.*;
 import net.java.sip.communicator.service.protocol.sip.*;
 import org.jitsi.util.*;
 
@@ -297,6 +297,9 @@ public class SIPAccountRegistrationForm
         registration.setProxyAutoConfigure(
             connectionPanel.isProxyAutoConfigureEnabled());
 
+        registration.setProxyForceBypassConfigure(
+            connectionPanel.isProxyForceBypassConfigureEnabled());
+        
         registration.setEnablePresence(
             presencePanel.isPresenceEnabled());
         registration.setForceP2PMode(
@@ -362,7 +365,8 @@ public class SIPAccountRegistrationForm
 
         String serverAddress = sipAccReg.getServerAddress();
 
-        String displayName = sipAccReg.getAccountDisplayName();
+        String displayName = sipAccReg.getAccountPropertyString(
+            ProtocolProviderFactory.DISPLAY_NAME);
 
         String authName = sipAccReg.getAuthorizationName();
 
@@ -380,7 +384,11 @@ public class SIPAccountRegistrationForm
 
         String clientTlsCertificateId = sipAccReg.getTlsClientCertificate();
 
-        boolean proxyAutoConfigureEnabled = sipAccReg.isProxyAutoConfigure();
+        boolean proxyAutoConfigureEnabled = 
+            sipAccReg.isProxyAutoConfigure();
+        
+        boolean proxyForceBypassConfigureEnabled = 
+            sipAccReg.isProxyForceBypassConfigure();
 
         String pollingPeriod = sipAccReg.getPollingPeriod();
 
@@ -420,14 +428,16 @@ public class SIPAccountRegistrationForm
         connectionPanel.setServerAddress(serverAddress);
         connectionPanel.setServerEnabled(isServerOverridden);
 
-        if (displayName != null && displayName.length() > 0)
-            accountPanel.setDisplayName(displayName);
+        accountPanel.setDisplayName(displayName);
 
         if(authName != null && authName.length() > 0)
             connectionPanel.setAuthenticationName(authName);
         connectionPanel.setCertificateId(clientTlsCertificateId);
 
-        connectionPanel.enablesProxyAutoConfigure(proxyAutoConfigureEnabled);
+        connectionPanel.enablesProxyAutoConfigure(
+                proxyAutoConfigureEnabled);
+        connectionPanel.enablesProxyForceBypassConfigure(
+                proxyForceBypassConfigureEnabled);
         connectionPanel.setServerPort(serverPort);
         connectionPanel.setProxy(proxyAddress);
 
