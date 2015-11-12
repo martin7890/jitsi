@@ -2417,6 +2417,13 @@ public class ProtocolProviderServiceSipImpl
             uriStr = "sip:" + uriStr;
         }
 
+        if(uriStr.indexOf("+") != -1 && Boolean.parseBoolean(getAccountID()
+            .getAccountProperties().get(ProtocolProviderFactory.PLUS_DISABLED)))
+        {
+            uriStr = uriStr.replace("+","");
+        }
+        uriStr += ";user=phone";
+
         Address toAddress = getAddressFactory().createAddress(uriStr);
 
         return toAddress;
